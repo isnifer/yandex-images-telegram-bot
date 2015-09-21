@@ -99,7 +99,9 @@ function subscribe (id) {
 }
 
 function unsubscribe (id) {
-    if (users.indexOf(id) !== -1) {
+    console.log(id);
+    var index = users.indexOf(id);
+    if (index !== -1) {
         users.splice(index, 1);
         console.log('==================== USER DELETED ====================');
         jsonfile.writeFile(file, users, standardCallback);
