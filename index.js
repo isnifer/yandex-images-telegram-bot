@@ -98,7 +98,6 @@ function unsubscribe (id) {
     if (index !== -1) {
         users.splice(index, 1);
         console.log('==================== USER DELETED ====================');
-        console.log(users);
         jsonfile.writeFile(file, users, standardCallback);
         return sendMessage(id, messages.unsubscribed);
     }
