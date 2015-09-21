@@ -91,7 +91,7 @@ function sendPhotoHandler(id) {
     var stream = _fs2['default'].createReadStream(imgPath);
 
     stream.on('error', function () {
-        _request2['default'].get('https://yandex.ru/images/today?size=2560x1600').on('finish', sendPhoto.bind(this, id, imgPath)).pipe(_fs2['default'].createWriteStream(imgPath));
+        _request2['default'].get('https://yandex.ru/images/today?size=2560x1600').pipe(_fs2['default'].createWriteStream(imgPath)).on('finish', sendPhoto.bind(this, id, imgPath));
     });
 
     stream.on('readable', sendPhoto.bind(this, id, imgPath));

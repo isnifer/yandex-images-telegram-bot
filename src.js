@@ -77,8 +77,8 @@ function sendPhotoHandler (id) {
     stream.on('error', function () {
         request
             .get('https://yandex.ru/images/today?size=2560x1600')
-            .on('finish', sendPhoto.bind(this, id, imgPath))
-            .pipe(fs.createWriteStream(imgPath));
+            .pipe(fs.createWriteStream(imgPath))
+            .on('finish', sendPhoto.bind(this, id, imgPath));
     });
 
     stream.on('readable', sendPhoto.bind(this, id, imgPath));
@@ -99,7 +99,6 @@ function subscribe (id) {
 }
 
 function unsubscribe (id) {
-    console.log(id);
     var index = users.indexOf(id);
     if (index !== -1) {
         users.splice(index, 1);
