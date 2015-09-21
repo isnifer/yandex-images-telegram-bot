@@ -4,6 +4,7 @@
   "description": "Yandex.Images every day picture for you!",
   "main": "lib/index.js",
   "dependencies": {
+    "jsonfile": "^2.2.2",
     "node-telegram-bot": "^0.1.2",
     "request": "^2.62.0"
   },

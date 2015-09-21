@@ -1,11 +1,26 @@
 import Bot from 'node-telegram-bot';
 import request from 'request';
 import fs from 'fs';
+import http from 'http';
+import jsonfile from 'jsonfile';
 import token from './token';
 
+const messages = {
+    success: 'Welcome on board! Everything is ok!\nPlease, wait just a moment.\n' +
+        'I will send you "Picture of the Day"',
+    error: 'Oops, something wrong. Try /subscribe one more time',
+    subscribed: 'You\'ve been already successfully subscribed',
+    unsubscribed: 'You successfully unsubscribed',
+    notFound: 'Sorry, but I haven\'t picture with this id in my collection'
+};
+
 const bot = new Bot(token);
+const file = __dirname + '/users.json';
 
 var users = [];
+jsonfile.readFile(file, function(err, arr) {
+    users = arr || [];
+});
 
 function trasformMonth (month) {
     if (month + 1 < 10) {
@@ -15,19 +30,44 @@ function trasformMonth (month) {
     return month + 1;
 }
 
+function standardCallback (err) {
+    if (err) {
+        console.error(err);
+    }
+    console.log(users);
+}
+
 function sendPhoto (id, imgPath) {
     bot.sendPhoto({
         chat_id: id,
-        caption: 'Yandex.Images Picture of the Day',
+        caption: 'Picture of the Day ' + imgPath.match(/\d/g).join(''),
         files: {
             photo: imgPath
         }
     });
 }
 
+function sendMessage (id, text) {
+    bot.sendMessage({
+        chat_id: id,
+        text: text
+    });
+}
+
+function get (id, imgId) {
+    var imgPath = './pics/' + imgId.match(/\d/g).join('') + '.jpg';
+    var picture = fs.createReadStream(imgPath);
+
+    picture.on('error', function () {
+        sendMessage(id, messages.notFound);
+    });
+
+    picture.on('readable', sendPhoto.bind(this, id, imgPath));
+}
+
 function sendPhotoHandler (id) {
     const today = new Date();
-    const imgPath = './' + today.getFullYear() + trasformMonth(today.getMonth()) + today.getDate() + '.jpg';
+    const imgPath = './pics/' + today.getFullYear() + trasformMonth(today.getMonth()) + today.getDate() + '.jpg';
     var file = fs.createReadStream(imgPath);
 
     file.on('error', function () {
@@ -41,11 +81,16 @@ function sendPhotoHandler (id) {
 }
 
 function subscribe (id) {
-    users.push(id);
-    console.log('==================== USER SUBSCRIBED ====================');
+    if (users.indexOf(id) === -1) {
+        users.push(id);
+        console.log('==================== USER SUBSCRIBED ====================');
+        jsonfile.writeFile(file, users, standardCallback);
+        sendMessage(id, messages.success);
 
-    // Send today's photo after subscription
-    sendPhotoHandler(id);
+        // Send today's photo after subscription
+        return sendPhotoHandler(id);
+    }
+    return sendMessage(id, messages.subscribed);
 }
 
 function unsubscribe (id) {
@@ -54,6 +99,8 @@ function unsubscribe (id) {
         users.splice(index, 1);
         console.log('==================== USER DELETED ====================');
         console.log(users);
+        jsonfile.writeFile(file, users, standardCallback);
+        return sendMessage(id, messages.unsubscribed);
     }
 }
 
@@ -62,6 +109,8 @@ function onMessageReceived (message) {
         subscribe(message.from.id);
     } else if (message.text === '/unsubscribe') {
         unsubscribe(message.from.id);
+    } else if (message.text.match(/\/get/)) {
+        get(message.from.id, message.text);
     }
 }
 

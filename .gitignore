@@ -1,3 +1,5 @@
 node_modules
 lib/token.js
+lib/users.json
+pics
 *.jpg
