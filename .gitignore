@@ -1,5 +1,3 @@
 node_modules
-lib/token.js
-lib/users.json
+data
 pics
-*.jpg

@@ -2,7 +2,7 @@
   "name": "yandex-images-bot",
   "version": "0.0.1",
   "description": "Yandex.Images every day picture for you!",
-  "main": "lib/index.js",
+  "main": "index.js",
   "dependencies": {
     "jsonfile": "^2.2.2",
     "node-telegram-bot": "^0.1.2",
@@ -10,8 +10,8 @@
   },
   "devDependencies": {},
   "scripts": {
-    "watch": "babel index.js -o ./lib/index.js -w",
-    "build": "babel index.js -o ./lib/index.js"
+    "watch": "babel src.js -o index.js -w",
+    "build": "babel src.js -o index.js"
   },
   "repository": {
     "type": "git",
