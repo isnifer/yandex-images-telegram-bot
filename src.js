@@ -61,7 +61,7 @@ function sendMessage (id, text) {
 function get (id, imgId) {
     imgId = imgId.match(/\d/g);
 
-    if (!imgId || imgId && isNaN(imgId)) {
+    if (!imgId || !imgId.length) {
         sendMessage(id, messages.notFound);
         return;
     } else {
