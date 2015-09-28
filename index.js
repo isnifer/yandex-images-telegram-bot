@@ -50,6 +50,10 @@ function trasformMonth(month) {
     return month + 1;
 }
 
+function getDate(today) {
+    return today.getFullYear() + trasformMonth(today.getMonth()) + today.getDate();
+}
+
 function standardCallback(err) {
     if (err) {
         console.error(err);
@@ -75,7 +79,16 @@ function sendMessage(id, text) {
 }
 
 function get(id, imgId) {
-    var imgPath = _path2['default'].resolve(__dirname, 'pics', imgId.match(/\d/g).join('') + '.jpg');
+    imgId = imgId.match(/\d/g);
+
+    if (!imgId || imgId && isNaN(imgId)) {
+        sendMessage(id, messages.notFound);
+        return;
+    } else {
+        imgId = imgId.join('');
+    }
+
+    var imgPath = _path2['default'].resolve(__dirname, 'pics', imgId + '.jpg');
     var picture = _fs2['default'].createReadStream(imgPath);
 
     picture.on('error', function () {
@@ -87,7 +100,7 @@ function get(id, imgId) {
 
 function sendPhotoHandler(id) {
     var today = new Date();
-    var imgPath = _path2['default'].resolve(__dirname, 'pics', today.getFullYear() + trasformMonth(today.getMonth()) + today.getDate() + '.jpg');
+    var imgPath = _path2['default'].resolve(__dirname, 'pics', getDate(today) + '.jpg');
     var stream = _fs2['default'].createReadStream(imgPath);
 
     stream.on('error', function () {
