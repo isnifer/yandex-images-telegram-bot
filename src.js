@@ -22,16 +22,12 @@ jsonfile.readFile(file, function(err, arr) {
     users = arr || [];
 });
 
-function trasformMonth (month) {
-    if (month + 1 < 10) {
-        return '0' + (month + 1);
-    }
-
-    return month + 1;
+function transformDay (day) {
+    return day < 10 ? '0' + day : String(day);
 }
 
 function getDate (today) {
-    return today.getFullYear() + trasformMonth(today.getMonth()) + today.getDate();
+    return today.getFullYear() + trasformDay(today.getMonth() + 1) + transformDay(today.getDate());
 }
 
 function standardCallback (err) {
