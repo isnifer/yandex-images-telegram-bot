@@ -27,7 +27,7 @@ function transformDay (day) {
 }
 
 function getDate (today) {
-    return today.getFullYear() + trasformDay(today.getMonth() + 1) + transformDay(today.getDate());
+    return today.getFullYear() + transformDay(today.getMonth() + 1) + transformDay(today.getDate());
 }
 
 function standardCallback (err) {
