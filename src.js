@@ -122,7 +122,7 @@ function onMessageReceived (message) {
         subscribe(message.from.id);
     } else if (message.text === '/unsubscribe') {
         unsubscribe(message.from.id);
-    } else if (message.text.match(/\/get/)) {
+    } else if (String(message.text).match(/\/get/)) {
         get(message.from.id, message.text);
     }
 }
