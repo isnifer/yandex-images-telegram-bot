@@ -118,12 +118,14 @@ function unsubscribe (id) {
 }
 
 function onMessageReceived (message) {
-    if (message.text === '/subscribe') {
+    var text = String(message.text);
+
+    if (text === '/subscribe') {
         subscribe(message.from.id);
-    } else if (message.text === '/unsubscribe') {
+    } else if (text === '/unsubscribe') {
         unsubscribe(message.from.id);
-    } else if (String(message.text).match(/\/get/)) {
-        get(message.from.id, message.text);
+    } else if (text.startsWith('/get')) {
+        get(message.from.id, text);
     }
 }
 
